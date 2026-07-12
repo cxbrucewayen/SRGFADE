@@ -4,10 +4,10 @@ This record freezes the source snapshot from which the release implementation is
 
 ## Authoritative files
 
-| Role | Workspace-relative source | SHA-256 | Bytes |
+| Role | Frozen source file | SHA-256 | Bytes |
 | --- | --- | --- | ---: |
-| Optimizer | `1SPADE/pyswarm-experiment/src/algorithms/srgfade.py` | `e710aa20da1be9688f62c61a6b854cb2f8f7c2708f651bcbf3981e111cef04a2` | 13072 |
-| Shared base | `1SPADE/pyswarm-experiment/src/algorithms/base.py` | `b2e26bae86f45790c635b82853cb23d2b3467fbe04a21a08f47d96401265a965` | 9247 |
+| Optimizer | `srgfade.py` | `e710aa20da1be9688f62c61a6b854cb2f8f7c2708f651bcbf3981e111cef04a2` | 13072 |
+| Shared base | `base.py` | `b2e26bae86f45790c635b82853cb23d2b3467fbe04a21a08f47d96401265a965` | 9247 |
 
 The optimizer implements Subspace Rotation Gradient Field Adaptive Differential Evolution (SRGFADE). Its four paper-aligned mechanisms are subspace rotation crossover, gradient-field-guided mutation, annealed Gaussian perturbation, and restricted simulated-annealing acceptance.
 
