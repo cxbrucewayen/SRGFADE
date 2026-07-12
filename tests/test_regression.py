@@ -1,72 +1,15 @@
-"""Fixed-seed regression checks against the frozen authoritative source."""
+"""Self-contained fixed-seed regression checks for the public release."""
 
 from __future__ import annotations
-
-import hashlib
-import importlib.util
-import inspect
-from pathlib import Path
-import sys
-import types
 
 import numpy as np
 import pytest
 
-from srgfade import SRGFADE as PublicSRGFADE
+from srgfade import SRGFADE
 
 
 ABS_TOL = 1e-12
 REL_TOL = 0.0
-AUTHORITATIVE_HASHES = {
-    "base.py": "b2e26bae86f45790c635b82853cb23d2b3467fbe04a21a08f47d96401265a965",
-    "srgfade.py": "e710aa20da1be9688f62c61a6b854cb2f8f7c2708f651bcbf3981e111cef04a2",
-}
-
-
-def _authoritative_directory() -> Path:
-    workspace_root = Path(__file__).resolve().parents[2]
-    directory = (
-        workspace_root
-        / "1SPADE"
-        / "pyswarm-experiment"
-        / "src"
-        / "algorithms"
-    )
-    if not directory.is_dir():
-        pytest.skip("authoritative workspace source is not available")
-    return directory
-
-
-def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as source:
-        for block in iter(lambda: source.read(64 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest()
-
-
-def _load_authoritative_class():
-    directory = _authoritative_directory()
-    for filename, expected_hash in AUTHORITATIVE_HASHES.items():
-        assert _sha256(directory / filename) == expected_hash
-
-    package_name = "_srgfade_authoritative"
-    package = types.ModuleType(package_name)
-    package.__path__ = [str(directory)]
-    sys.modules[package_name] = package
-
-    for module_name, filename in (("base", "base.py"), ("core", "srgfade.py")):
-        qualified_name = f"{package_name}.{module_name}"
-        spec = importlib.util.spec_from_file_location(
-            qualified_name,
-            directory / filename,
-        )
-        assert spec is not None and spec.loader is not None
-        module = importlib.util.module_from_spec(spec)
-        sys.modules[qualified_name] = module
-        spec.loader.exec_module(module)
-
-    return sys.modules[f"{package_name}.core"].SRGFADE
 
 
 def _weighted_shifted_sphere(x: np.ndarray) -> float:
@@ -75,114 +18,118 @@ def _weighted_shifted_sphere(x: np.ndarray) -> float:
     return float(np.sum(weights * (x - target) ** 2))
 
 
-def _authoritative_perturbation_argument(
-    authoritative_class,
-    value: float,
-) -> dict[str, float]:
-    """Map the public perturbation coefficient to the frozen signature."""
-    authoritative_parameters = set(
-        inspect.signature(authoritative_class).parameters
-    )
-    public_parameters = set(inspect.signature(PublicSRGFADE).parameters)
-    release_only_parameters = {"perturbation_scale"}
-    source_only_parameters = (
-        authoritative_parameters
-        - public_parameters
-        - release_only_parameters
-    )
-    assert len(source_only_parameters) == 1
-    return {source_only_parameters.pop(): value}
-
-
 @pytest.mark.parametrize(
-    ("seed", "dimension", "population", "budget"),
+    (
+        "seed",
+        "dimension",
+        "population",
+        "budget",
+        "coefficient",
+        "expected_value",
+        "expected_position",
+    ),
     [
-        (0, 2, 8, 37),
-        (42, 5, 12, 113),
-        (2026, 8, 16, 257),
-        (7, 3, 6, 6),
+        (
+            0,
+            2,
+            8,
+            37,
+            1.0,
+            0.16901261352215655,
+            [-0.6493320602321959, 0.31908878053948553],
+        ),
+        (
+            42,
+            5,
+            12,
+            113,
+            1.0,
+            1.8637621632670696,
+            [
+                0.616380091937393,
+                -0.1565487762791935,
+                -0.3087613002583187,
+                -0.24149231657724135,
+                0.010045856489219795,
+            ],
+        ),
+        (
+            2026,
+            8,
+            16,
+            257,
+            1.0,
+            7.117822702598474,
+            [
+                0.9345396812003771,
+                1.0057644788991558,
+                0.04489123376333726,
+                -0.15728717720942387,
+                0.0012623811351622771,
+                0.34719485787917526,
+                0.6286731258816102,
+                -0.10550970172971703,
+            ],
+        ),
+        (
+            7,
+            3,
+            6,
+            6,
+            1.0,
+            17.105992788783663,
+            [-2.4658419743823, 2.4594315456808022, 0.06886462008625438],
+        ),
+        (
+            11,
+            4,
+            10,
+            97,
+            0.35,
+            0.3259188226531642,
+            [
+                0.1468108479451304,
+                -0.2004454303902142,
+                0.130105554688134,
+                0.0666515851031684,
+            ],
+        ),
     ],
 )
-def test_public_result_matches_authoritative_result(
+def test_fixed_seed_result_matches_frozen_release_baseline(
     seed: int,
     dimension: int,
     population: int,
     budget: int,
+    coefficient: float,
+    expected_value: float,
+    expected_position: list[float],
 ) -> None:
-    authoritative_class = _load_authoritative_class()
-    common = {
-        "dim": dimension,
-        "lb": np.full(dimension, -3.0),
-        "ub": np.full(dimension, 4.0),
-        "pop_size": population,
-        "max_fes": budget,
-        "seed": seed,
-        "svd_var_threshold": 0.8,
-        "alpha_g": 0.3,
-        "sa_accept_scale": 0.3,
-    }
-
-    authoritative_result = authoritative_class(
-        **common,
-        **_authoritative_perturbation_argument(
-            authoritative_class,
-            1.0,
-        ),
-    ).optimize(_weighted_shifted_sphere)
-    public_result = PublicSRGFADE(
-        **common,
-        perturbation_scale=1.0,
+    lower = -3.0 if coefficient == 1.0 else -2.0
+    upper = 4.0 if coefficient == 1.0 else 2.0
+    result = SRGFADE(
+        dim=dimension,
+        lb=np.full(dimension, lower),
+        ub=np.full(dimension, upper),
+        pop_size=population,
+        max_fes=budget,
+        seed=seed,
+        svd_var_threshold=0.8,
+        alpha_g=0.3,
+        perturbation_scale=coefficient,
+        sa_accept_scale=0.3,
     ).optimize(_weighted_shifted_sphere)
 
-    assert public_result.total_fes == authoritative_result.total_fes
-    assert public_result.total_fes == budget
+    assert result.total_fes == budget
     np.testing.assert_allclose(
-        public_result.best_fitness,
-        authoritative_result.best_fitness,
+        result.best_fitness,
+        expected_value,
         rtol=REL_TOL,
         atol=ABS_TOL,
     )
     np.testing.assert_allclose(
-        public_result.best_position,
-        authoritative_result.best_position,
-        rtol=REL_TOL,
-        atol=ABS_TOL,
-    )
-
-
-def test_public_perturbation_name_preserves_nondefault_behavior() -> None:
-    authoritative_class = _load_authoritative_class()
-    common = {
-        "dim": 4,
-        "lb": np.full(4, -2.0),
-        "ub": np.full(4, 2.0),
-        "pop_size": 10,
-        "max_fes": 97,
-        "seed": 11,
-    }
-
-    authoritative_result = authoritative_class(
-        **common,
-        **_authoritative_perturbation_argument(
-            authoritative_class,
-            0.35,
-        ),
-    ).optimize(_weighted_shifted_sphere)
-    public_result = PublicSRGFADE(
-        **common,
-        perturbation_scale=0.35,
-    ).optimize(_weighted_shifted_sphere)
-
-    assert public_result.total_fes == authoritative_result.total_fes
-    np.testing.assert_allclose(
-        public_result.best_fitness,
-        authoritative_result.best_fitness,
-        rtol=REL_TOL,
-        atol=ABS_TOL,
-    )
-    np.testing.assert_allclose(
-        public_result.best_position,
-        authoritative_result.best_position,
+        result.best_position,
+        expected_position,
         rtol=REL_TOL,
         atol=ABS_TOL,
     )
