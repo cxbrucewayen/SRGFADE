@@ -1,0 +1,6 @@
+include CITATION.cff
+include LICENSE
+include README.md
+include requirements.txt
+recursive-include examples *.md *.py
+recursive-include tests *.md *.py

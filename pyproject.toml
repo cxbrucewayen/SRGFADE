@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "srgfade-optimizer"
+version = "1.0.0"
+description = "Subspace Rotation Gradient Field Adaptive Differential Evolution"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "LicenseRef-SRGFADE-Source-Available"
+license-files = ["LICENSE"]
+authors = [
+  { name = "Xin Cheng" },
+  { name = "Zhilin Wang" },
+  { name = "Pan Qiu" },
+  { name = "Huiling Chen" },
+  { name = "Xiangjun Cai" },
+]
+keywords = [
+  "differential evolution",
+  "continuous optimization",
+  "box-constrained optimization",
+  "metaheuristics",
+]
+dependencies = [
+  "numpy>=1.20",
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering",
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest>=7",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["srgfade", "srgfade.*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use this software, cite the accompanying manuscript."
+title: "SRGFADE: Subspace Rotation Gradient Field Adaptive Differential Evolution"
+type: software
+version: 1.0.0
+authors:
+  - family-names: Cheng
+    given-names: Xin
+  - family-names: Wang
+    given-names: Zhilin
+  - family-names: Qiu
+    given-names: Pan
+  - family-names: Chen
+    given-names: Huiling
+  - family-names: Cai
+    given-names: Xiangjun
+preferred-citation:
+  type: article
+  title: >-
+    Subspace Rotation Gradient Field Adaptive Differential Evolution for
+    Constrained Three-Dimensional UAV Path Planning
+  authors:
+    - family-names: Cheng
+      given-names: Xin
+    - family-names: Wang
+      given-names: Zhilin
+    - family-names: Qiu
+      given-names: Pan
+    - family-names: Chen
+      given-names: Huiling
+    - family-names: Cai
+      given-names: Xiangjun
+  year: 2026
