@@ -52,10 +52,12 @@ perturbation argument directly.
 Risk: publishing that name would reintroduce terminology that is not used by
 the manuscript or the public API.
 
-Fix: the regression adapter now compares the public and frozen constructor
-signatures and maps the single differing coefficient by introspection. The
-same default and nondefault numeric comparisons remain in place. The complete
-test suite passed after the change.
+Fix: the authoritative comparison harness mapped the single differing
+coefficient by introspection. The public regression module stores the five
+result observations established by that comparison and checks them without
+accessing files outside the repository. The same default and nondefault
+numeric cases remain in place, and the complete test suite passes in a cold
+clone.
 
 ### Finding 2: incomplete source distribution
 

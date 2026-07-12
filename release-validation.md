@@ -110,12 +110,11 @@ is zero.
 
 ### 2.5 Release-content checks
 
-The runtime package, README, and example contained no historical algorithm
-identifier, historical mechanism wording, control-layer phrases, credential
-markers, personal absolute paths, or unfinished-work markers. The historical
-argument name required to call the frozen implementation occurs only in the
-regression adapter and not in the runtime package or public algorithm
-description.
+The runtime package, README, example, and self-contained public tests contain
+no historical algorithm identifier, historical mechanism wording,
+control-layer phrases, credential markers, personal absolute paths, or
+unfinished-work markers. The separate authoritative comparison harness mapped
+the differing perturbation argument without exposing it in the public package.
 
 No cache directory, nested Git metadata, or file larger than 1 MiB remained
 in the release directory after cleanup. The inspected Python and test files
