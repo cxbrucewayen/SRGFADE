@@ -1,6 +1,6 @@
 # SRGFADE release manifest
 
-Publication time: 2026-07-12T08:17:07Z
+Publication time: 2026-07-12T08:31:17Z
 
 Public repository: https://github.com/cxbrucewayen/SRGFADE
 
@@ -8,7 +8,7 @@ Public repository: https://github.com/cxbrucewayen/SRGFADE
 
 | Item | Local commit SHA | Remote commit SHA | Reference |
 | --- | --- | --- | --- |
-| Version 1.0.0 release payload | `9b0a4f70dd13848065d01452679d1604a304c222` | `9b0a4f70dd13848065d01452679d1604a304c222` | `refs/tags/v1.0.0` |
+| Version 1.0.0 release payload | `749139dfa8e398ce0e18e8023f0659c72e583821` | `749139dfa8e398ce0e18e8023f0659c72e583821` | `refs/tags/v1.0.0` |
 
 The `v1.0.0` tag fixes the release payload at the commit shown above. The
 `main` branch contains the same payload and this manifest. The current `main`
