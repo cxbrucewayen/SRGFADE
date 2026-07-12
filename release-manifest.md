@@ -31,6 +31,7 @@ The `main` branch contains exactly these files:
 - `release-manifest.md`
 - `release-readiness-audit.md`
 - `release-validation.md`
+- `release-verification.md`
 - `requirements.txt`
 - `srgfade/__init__.py`
 - `srgfade/base.py`
