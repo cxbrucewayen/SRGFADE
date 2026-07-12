@@ -2,6 +2,8 @@
 
 Verification completed: 2026-07-12T08:33:46Z
 
+Publication-rigor refresh verified: 2026-07-12T08:57:09Z
+
 Public repository: https://github.com/cxbrucewayen/SRGFADE
 
 ## 1. Scope and anonymous access
@@ -34,13 +36,14 @@ Anonymous `git ls-remote` and the cold clone returned these references:
 
 | Reference | Remote SHA | Cold-clone SHA | Result |
 | --- | --- | --- | --- |
-| `refs/heads/main` | `39f12d32fcfee0ab2fdc86dd6dfc5adb58579562` | `39f12d32fcfee0ab2fdc86dd6dfc5adb58579562` | matched |
-| `refs/tags/v1.0.0` | `749139dfa8e398ce0e18e8023f0659c72e583821` | `749139dfa8e398ce0e18e8023f0659c72e583821` | matched |
+| `refs/heads/main` | `ec06544ac9e473e2aaba20b49e23cd87c7543c25` | `ec06544ac9e473e2aaba20b49e23cd87c7543c25` | matched |
+| `refs/tags/v1.0.0` | `700813feeb5cb7aabdfe77ce7db67e0d1ea13926` | `700813feeb5cb7aabdfe77ce7db67e0d1ea13926` | matched |
 
 The tag fixes the version 1.0.0 release payload. A name-status comparison from
 `v1.0.0` to the verified `main` commit reported only
-`A release-manifest.md`. The package, README, licence, citation metadata,
-example, and tests were identical between the two references.
+`A release-manifest.md` and `A release-verification.md`. The package, README,
+licence, citation metadata, example, baseline record, and tests were identical
+between the two references.
 
 A later documentation-only commit on `main` adds this report and its manifest
 whitelist entry. That commit does not change the version 1.0.0 payload.
@@ -69,8 +72,8 @@ git checkout --detach v1.0.0
 
 | Checkout | Installation | Complete test suite | Quick start |
 | --- | --- | --- | --- |
-| `main` at `39f12d32fcfee0ab2fdc86dd6dfc5adb58579562` | completed | 28 passed, 0 skipped, 0 failed in 0.42 s | completed; best fitness `0.149317796824`, 600 evaluations |
-| `v1.0.0` at `749139dfa8e398ce0e18e8023f0659c72e583821` | completed | 28 passed, 0 skipped, 0 failed in 0.27 s | completed; best fitness `0.149317796824`, 600 evaluations |
+| `main` at `ec06544ac9e473e2aaba20b49e23cd87c7543c25` | completed | 28 passed, 0 skipped, 0 failed | completed; best fitness `0.149317796824`, 600 evaluations |
+| `v1.0.0` at `700813feeb5cb7aabdfe77ce7db67e0d1ea13926` | completed | 28 passed, 0 skipped, 0 failed | completed; best fitness `0.149317796824`, 600 evaluations |
 
 Both quick-start runs returned the same best position:
 
@@ -95,7 +98,18 @@ committed, the `v1.0.0` payload was updated, and the full anonymous procedure
 was repeated from a new clone and environment. The final results are those in
 Section 4.
 
-## 6. Result and cleanup
+## 6. Publication-rigor refresh
+
+A publication-rigor scan found two private workspace directory prefixes in the
+baseline table. The table now identifies the frozen files by file name only;
+the recorded SHA-256 values and byte counts are unchanged. The correction was
+applied independently to `main` and the `v1.0.0` payload. A new anonymous clone
+confirmed zero matches for private directory names, absolute local paths,
+email addresses, legacy terminology, or credential-related terms on both
+references. Both references again passed all 28 tests and produced identical
+quick-start output.
+
+## 7. Result and cleanup
 
 The public repository pages, raw licence, raw citation metadata, anonymous Git
 references, cold clone, README installation, complete tests, and quick start

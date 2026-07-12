@@ -2,18 +2,24 @@
 
 Publication time: 2026-07-12T08:31:17Z
 
+Rigor-audit refresh: 2026-07-12T08:57:09Z
+
 Public repository: https://github.com/cxbrucewayen/SRGFADE
 
 ## Git references
 
 | Item | Local commit SHA | Remote commit SHA | Reference |
 | --- | --- | --- | --- |
-| Version 1.0.0 release payload | `749139dfa8e398ce0e18e8023f0659c72e583821` | `749139dfa8e398ce0e18e8023f0659c72e583821` | `refs/tags/v1.0.0` |
+| Version 1.0.0 release payload | `700813feeb5cb7aabdfe77ce7db67e0d1ea13926` | `700813feeb5cb7aabdfe77ce7db67e0d1ea13926` | `refs/tags/v1.0.0` |
 
 The `v1.0.0` tag fixes the release payload at the commit shown above. The
 `main` branch contains the same payload and this manifest. The current `main`
 commit is available from the public Git reference because a commit cannot
 embed its own SHA in a file that contributes to that SHA.
+
+The refresh changes only the baseline table labels and file-name presentation,
+removing private workspace directory prefixes. The frozen source hashes,
+package implementation, interface, examples, and tests are unchanged.
 
 ## Repository whitelist
 
